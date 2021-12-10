@@ -1,0 +1,31 @@
+<meta charset="utf-8">
+<style>
+	body {
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+</style>
+<input type="number" id="income">
+<!-- <button id="go">Go</button> -->
+
+<section>
+	<h3>Ch: $<span id="ch"></span></h3>
+	<h3>Expenses: $<span id="exp"></span></h3>
+	<h3>Fires: $<span id="fir"></span></h3>
+	<h3>Smile: $<span id="smi"></span></h3>
+	<h3>Splurge: $<span id="spl"></span></h3>
+	<h3>Mojo: $<span id="mo"></span></h3>
+</section>
+
+<script>
+	var qS = document.querySelector.bind(document);
+	qS('#income').addEventListener('input', function(e){
+		var inc = parseFloat(qS('#income').value);
+		console.log(inc);
+		qS('#ch').innerText = Math.floor(inc * 25) / 100;
+		qS('#exp').innerText = Math.floor(inc * 30) / 100;
+		qS('#fir').innerText = Math.floor(inc * 20) / 100;
+		qS('#smi').innerText = Math.floor(inc * 10) / 100;
+		qS('#spl').innerText = Math.floor(inc * 10) / 100;
+		qS('#mo').innerText = Math.floor(inc * 5) / 100;
+	})
+</script>
