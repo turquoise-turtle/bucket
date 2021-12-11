@@ -1,0 +1,32 @@
+{
+	"name": "Bucket Splitter",
+	"short_name": "bucket",
+	"description": "Progressive Web App that lets you split your income into buckets.",
+	"icons": [
+	  {
+		"src": "icons/icon32.png",
+		"sizes": "32x32",
+		"type": "image/png"
+	  },
+	  {
+		"src": "icons/icon64.png",
+		"sizes": "64x64",
+		"type": "image/png"
+	  },
+	  {
+		"src": "icons/icon128.png",
+		"sizes": "128x128",
+		"type": "image/png"
+	  },
+	  {
+		"src": "icons/logo.png",
+		"sizes": "306x306",
+		"type": "image/png"
+	  }
+	],
+	"start_url": "/bucket/index.html",
+	"display": "fullscreen",
+	"theme_color": "#0b525b",
+	"background_color": "#0b525b"
+  }
+  
