@@ -3,39 +3,60 @@
 <title>Bucket Money</title>
 <link rel="manifest" href="bucket.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon32.png">
-<style>
-	body {
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-		max-width: 95%;
-	}
-	/* @media screen and (max-width: 767px) { */
-		input, select, textarea {
-			font-size: 16px;
-		}
-	/* } */
-</style>
+<link rel="stylesheet" href="main.css">
 <input type="number" id="income">
 <!-- <button id="go">Go</button> -->
 
 <section>
-	<h3>Ch: $<span id="ch"></span></h3>
+	<!-- <h3>Ch: $<span id="ch"></span></h3>
 	<h3>Expenses: $<span id="exp"></span></h3>
 	<h3>Fires: $<span id="fir"></span></h3>
 	<h3>Smile: $<span id="smi"></span></h3>
 	<h3>Splurge: $<span id="spl"></span></h3>
-	<h3>Mojo: $<span id="mo"></span></h3>
+	<h3>Mojo: $<span id="mo"></span></h3> -->
 </section>
+
+<br>
+<br>
+<h3><a href="settings.html">Settings</a></h3>
 
 <script>
 	var qS = document.querySelector.bind(document);
+
+	var mapO = JSON.stringify({'ch': 'ch', 'exp': 'Expenses', 'fir': 'Fires', 'smi': 'Smile', 'spl': 'Splurge', 'mo': 'Mojo'});
+	var valO = JSON.stringify({ch: 25, exp: 30, fir: 20, smi: 10, spl: 10, mo: 5});
+	var defMapT = localStorage.getItem('bucket_map') || mapO;
+	var defMap = JSON.parse(defMapT);
+	var defValT = localStorage.getItem('bucket_val') || valO;
+	var defVal = JSON.parse(defValT);
+	for (var id in defMap) {
+		var nam = document.createElement('h3');
+		nam.dataset.mapname = id;
+		var title = document.createElement('span');
+		title.innerText = defMap[id] + ' $';
+		nam.appendChild(title);
+		var val = document.createElement('span');
+		val.classList.add('val');
+		val.dataset.val = defVal[id];
+		nam.appendChild(val);
+		
+		qS('section').appendChild(nam);
+	}
+
+
 	qS('#income').addEventListener('input', function(e){
 		var inc = parseFloat(qS('#income').value);
 		console.log(inc);
-		qS('#ch').innerText = Math.floor(inc * 25) / 100;
-		qS('#exp').innerText = Math.floor(inc * 30) / 100;
-		qS('#fir').innerText = Math.floor(inc * 20) / 100;
-		qS('#smi').innerText = Math.floor(inc * 10) / 100;
-		qS('#spl').innerText = Math.floor(inc * 10) / 100;
-		qS('#mo').innerText = Math.floor(inc * 5) / 100;
+
+		var x = document.querySelectorAll('.val');
+		for (var e of x) {
+			e.innerText = Math.floor(inc * e.dataset.val) / 100;
+		}
+		// qS('#ch').innerText = Math.floor(inc * 25) / 100;
+		// qS('#exp').innerText = Math.floor(inc * 30) / 100;
+		// qS('#fir').innerText = Math.floor(inc * 20) / 100;
+		// qS('#smi').innerText = Math.floor(inc * 10) / 100;
+		// qS('#spl').innerText = Math.floor(inc * 10) / 100;
+		// qS('#mo').innerText = Math.floor(inc * 5) / 100;
 	})
 </script>

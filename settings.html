@@ -1,0 +1,106 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bucket Splitter Settings</title>
+<link rel="manifest" href="bucket.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon32.png">
+<link rel="stylesheet" href="main.css">
+
+<input type="text" id="proname" placeholder="enter name of bucket"> <input type="number" id="provalue" placeholder="enter percent"> <button id="add">Add</button>
+<br>
+<br>
+<section id="values"></section>
+<button id="save">Save</button>
+
+
+<br>
+<br>
+<h3><a href="index.html">Bucket Splitter</a></h3>
+
+<script>
+	var qS = document.querySelector.bind(document);
+	if (! (crypto.randomUUID instanceof Function)) {
+		crypto.randomUUID = function uuidv4() {
+			return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+			(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+			);
+		}
+	}
+
+	var mapO = JSON.stringify({'ch': 'ch', 'exp': 'Expenses', 'fir': 'Fires', 'smi': 'Smile', 'spl': 'Splurge', 'mo': 'Mojo'});
+	var valO = JSON.stringify({ch: 25, exp: 30, fir: 20, smi: 10, spl: 10, mo: 5});
+	var defMapT = localStorage.getItem('bucket_map') || mapO;
+	var defMap = JSON.parse(defMapT);
+	var defValT = localStorage.getItem('bucket_val') || valO;
+	var defVal = JSON.parse(defValT);
+	
+	for (var id in defMap) {
+		var div = document.createElement('div');
+		div.classList.add('item');
+		div.dataset.mapname = id;
+		var nam = document.createElement('input');
+		nam.classList.add('name');
+		nam.value = defMap[id];
+		var val = document.createElement('input');
+		val.classList.add('value');
+		val.type = "number";
+		val.value = defVal[id];
+		var del = document.createElement('button');
+		del.innerText = 'Remove';
+		del.classList.add('remove');
+		del.addEventListener('click', remove);
+		div.appendChild(nam);
+		div.appendChild(val);
+		div.appendChild(del);
+		qS('#values').appendChild(div);
+	}
+
+	qS('#save').addEventListener('click', function(e){
+		var items = document.querySelectorAll('.item');
+		var newMap = {};
+		var newVal = {};
+		for (var x of items) {
+			var id = x.dataset.mapname;
+			var nam = x.querySelector('.name').value;
+			var val = parseFloat(x.querySelector('.value').value);
+			newMap[id] = nam;
+			newVal[id] = val;
+		}
+		localStorage.setItem('bucket_map', JSON.stringify(newMap));
+		localStorage.setItem('bucket_val', JSON.stringify(newVal));
+	});
+
+	qS('#add').addEventListener('click', function(e){
+		var nameT = qS('#proname').value;
+		var valueT = qS('#provalue').value;
+
+		var div = document.createElement('div');
+		div.classList.add('item');
+		//create id
+		var id = crypto.randomUUID()
+		div.dataset.mapname = id;
+		var nam = document.createElement('input');
+		nam.classList.add('name');
+		nam.value = nameT;
+		var val = document.createElement('input');
+		val.classList.add('value');
+		val.type = "number";
+		val.value = valueT;
+		var del = document.createElement('button');
+		del.innerText = 'Remove';
+		del.classList.add('remove');
+		del.addEventListener('click', remove);
+		div.appendChild(nam);
+		div.appendChild(val);
+
+		qS('#proname').value = '';
+		qS('#provalue').value = '';
+		qS('#values').appendChild(div);
+	});
+
+	function remove(e) {
+		console.log(e.target.parentNode, e.target);
+		var item = e.target.parentNode;
+		item.parentNode.removeChild(item);
+	}
+
+</script>
