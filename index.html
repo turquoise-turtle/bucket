@@ -1,10 +1,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bucket Money</title>
+<title>Bucket Splitter</title>
 <link rel="manifest" href="bucket.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon32.png">
 <link rel="stylesheet" href="main.css">
-<input type="number" id="income">
+
+<input type="number" id="income" placeholder="enter income">
 <!-- <button id="go">Go</button> -->
 
 <section>
@@ -21,6 +22,16 @@
 <h3><a href="settings.html">Settings</a></h3>
 
 <script>
+	if ('serviceWorker' in navigator) {
+		window.addEventListener('load', function() {
+			navigator.serviceWorker.register('/bucket/service-worker.js')
+			.then(function (reg){
+				console.log('sw registered:', reg);
+			}, /*catch*/ function(error) {
+				console.log('Service worker registration failed:', error);
+			});
+		});
+	}
 	var qS = document.querySelector.bind(document);
 
 	var mapO = JSON.stringify({'ch': 'ch', 'exp': 'Expenses', 'fir': 'Fires', 'smi': 'Smile', 'spl': 'Splurge', 'mo': 'Mojo'});
@@ -50,7 +61,11 @@
 
 		var x = document.querySelectorAll('.val');
 		for (var e of x) {
-			e.innerText = Math.floor(inc * e.dataset.val) / 100;
+			if (isNaN(inc)) {
+				e.innerText = '';
+			} else {
+				e.innerText = Math.floor(inc * e.dataset.val) / 100;
+			}
 		}
 		// qS('#ch').innerText = Math.floor(inc * 25) / 100;
 		// qS('#exp').innerText = Math.floor(inc * 30) / 100;

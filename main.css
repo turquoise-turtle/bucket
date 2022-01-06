@@ -7,3 +7,6 @@ input, select, textarea {
 	font-size: 18px;
 }
 /* } */
+.item {
+	margin-bottom: 1em;
+}
