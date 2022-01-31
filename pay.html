@@ -1,0 +1,71 @@
+<p>Weekdays: <input type="number" value=0 id="week"></p>
+
+<p>Saturdays: <input type="number" value=0 id="sat"></p>
+
+<p>Sundays: <input type="number" value=0 id="sun"></p>
+
+<h3>Gross income: <span id="gross"></span></h3>
+<h3>Net income: <span id="net"></span></h3>
+
+<script>
+	var qS = document.querySelector.bind(document);
+
+	var week = 0;
+	var sat = 0;
+	var sun = 0;
+	var gross = 0;
+
+	qS('#week').addEventListener('input', function(){
+		week = parseFloat(qS('#week').value);
+		recalculate()
+	});
+	qS('#sat').addEventListener('input', function(){
+		sat = parseFloat(qS('#sat').value);
+		recalculate()
+	});
+	qS('#sun').addEventListener('input', function(){
+		sun = parseFloat(qS('#sun').value);
+		recalculate()
+	});
+	function recalculate(){
+		gross = (week * 1.125 + sat * 1.75 + sun * 2) * 5.5 * 22.1575 * 1.25;
+		qS('#gross').innerText = gross.toFixed(2);
+
+		var wk = Math.floor(gross / 2) + 0.99;
+		var a = 0;
+		var b = 0;
+		if (wk < 359) {
+			//
+		} else if (wk < 438) {
+			a = 0.19;
+			b = 68.3462;
+		} else if (wk < 548) {
+			a = 0.29;
+			b = 112.1942;
+		} else if (wk < 721) {
+			a = 0.21;
+			b = 68.3465;
+		} else if (wk < 865) {
+			a = 0.219;
+			b = 74.8369;
+		} else if (wk < 1282) {
+			a = 0.3477;
+			b = 186.2119;
+		} else if (wk < 2307) {
+			a = 0.3450;
+			b = 182.7504;
+		} else if (wk < 3461) {
+			a = 0.3900;
+			b = 286.5965;
+		} else {
+			a = 0.47;
+			b = 563.5196;
+		}
+
+		var wh = Math.round(a * wk - b);
+		var twh = wh * 2;
+
+		var net = gross - twh;
+		qS('#net').innerText = net.toFixed(2);
+	}
+</script>

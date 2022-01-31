@@ -40,7 +40,8 @@ function precache() {
 	  '/bucket/icons/icon128.png',
 	  '/bucket/icons/icon512.png',
 	  '/bucket/icons/logo.png',
-      '/bucket/a.js'
+      '/bucket/a.js',
+	  '/bucket/pay.html'
     ]);
   });
 }
