@@ -19,7 +19,7 @@
 
 <br>
 <br>
-<h3><a href="index.html">Bucket Splitter</a></h3>
+<h3><a href="index.html" id="bucket">Bucket Splitter</a></h3>
 
 <script>
 	var qS = document.querySelector.bind(document);
@@ -117,5 +117,7 @@
 
 		var net = gross - twh;
 		qS('#net').innerText = net.toFixed(2);
+
+		qS('#bucket').href = 'index.html#' + net.toFixed(2);
 	}
 </script>

@@ -52,6 +52,16 @@
 
 
 	qS('#income').addEventListener('input', function(e){
+		recalculate();
+	})
+
+	var initial = window.location.hash.substr(1);
+	if (!isNaN(initial)) {
+		qS('#income').value = initial;
+	}
+	recalculate();
+
+	function recalculate() {
 		var inc = parseFloat(qS('#income').value);
 		console.log(inc);
 
@@ -69,5 +79,5 @@
 		// qS('#smi').innerText = Math.floor(inc * 10) / 100;
 		// qS('#spl').innerText = Math.floor(inc * 10) / 100;
 		// qS('#mo').innerText = Math.floor(inc * 5) / 100;
-	})
+	}
 </script>
