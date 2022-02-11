@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="main.css">
 
 <p>Hours per shift: <input type="number" value=5.5 id="hours"><span class="rate">Base Pay:</span><input type="number" value=22.1575 id="baserate"></p>
-<p>Weekdays: <input type="number" value=0 id="week"> <span class="rate">Rate:</span><input type="number" value=1.125 id="weekrate"></p>
+<p>Weekdays: <input type="number" value=0 id="week"> <span class="rate">Rate:</span><input type="number" value=1.375 id="weekrate"></p>
 
 <p>Saturdays: <input type="number" value=0 id="sat"><span class="rate">Rate:</span><input type="number" value=1.75 id="satrate"></p>
 
@@ -76,7 +76,7 @@
 		var weekpay = week * weekrate;
 		var satpay = sat * satrate;
 		var sunpay = sun * sunrate;
-		gross = (weekpay + satpay + sunpay) * hours * baserate * 1.25;
+		gross = (weekpay + satpay + sunpay) * hours * baserate;
 		console.log(weekpay, satpay, sunpay, gross);
 		qS('#gross').innerText = gross.toFixed(2);
 
