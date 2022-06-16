@@ -10,7 +10,7 @@
 
 <section>
 	
-	<!-- <p><span class="payTitle">Weekdays</span>
+	<!-- <p class="container"><span class="payTitle">Weekdays</span>
 		<span>: </span>
 		<input class="payInput" type="number" data-payid="wk">
 		<span> shifts at </span>
@@ -22,7 +22,7 @@
 	
 </section>
 
-<br>
+<!-- <br> -->
 <h3>Gross income: <span id="gross"></span></h3>
 <h3>Net income: <span id="net"></span></h3>
 <h3>Tax Withheld: <span id="twh"></span></h3>
@@ -68,6 +68,7 @@
 	// </p>
 		
 		var container = document.createElement('p')
+		container.classList.add('category');
 		var nam = document.createElement('span');
 		nam.classList.add('payTitle');
 		nam.innerText = defMap[id];
