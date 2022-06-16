@@ -1,21 +1,35 @@
+<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pay Calculator</title>
+<title>Payslip Calculator</title>
 <link rel="manifest" href="bucket.webmanifest">
 <link rel="icon" type="image/png" href="icons/icon32.png">
 <link rel="stylesheet" href="main.css">
 
-<p>Hours per shift: <input type="number" value=5.5 id="hours"><span class="rate">Base Pay:</span><input type="number" value=22.1575 id="baserate"></p>
-<p>Weekdays: <input type="number" value=0 id="week"> <span class="rate">Rate:</span><input type="number" value=1.375 id="weekrate"></p>
+<p>Base Pay: $<span id="basepay">22.1575</span></p>
 
-<p>Saturdays: <input type="number" value=0 id="sat"><span class="rate">Rate:</span><input type="number" value=1.75 id="satrate"></p>
+<section>
+	
+	<!-- <p><span class="payTitle">Weekdays</span>
+		<span>: </span>
+		<input class="payInput" type="number" data-payid="wk">
+		<span> shifts at </span>
+		<span class="value">1.375</span>
+		<span>x for </span>
+		<span class="hours">5.5</span>
+		<span> hours</span>
+	</p> -->
+	
+</section>
 
-<p>Sundays: <input type="number" value=0 id="sun"><span class="rate">Rate:</span><input type="number" value=2 id="sunrate"></p>
-
+<br>
 <h3>Gross income: <span id="gross"></span></h3>
-
 <h3>Net income: <span id="net"></span></h3>
 <h3>Tax Withheld: <span id="twh"></span></h3>
+
+<br>
+<br>
+<h3><a href="paysettings.html">Payslip Settings</a></h3>
 
 <br>
 <br>
@@ -24,60 +38,137 @@
 <script>
 	var qS = document.querySelector.bind(document);
 
-	var hours = 5.5;
-	var baserate = 22.1575;
+	var payMeta = JSON.stringify({'base': 22.1575});
+	var payMapO = JSON.stringify({'wk': 'Weekdays', 'sat': 'Saturdays', 'sun': 'Sundays', 'pub': 'Public Holidays'});
+	var payValO = JSON.stringify({wk: 1.375, sat: 1.75, sun: 2, pub: 2.75});
+	var payHours = JSON.stringify({wk: 5.5, sat: 5.5, sun: 5.5, pub: 5.5});
+	
+	var defMetaT = localStorage.getItem('pay_meta') || payMeta;
+	var defMeta = JSON.parse(defMetaT);
+	var defMapT = localStorage.getItem('pay_map') || payMapO;
+	var defMap = JSON.parse(defMapT);
+	var defValT = localStorage.getItem('pay_val') || payValO;
+	var defVal = JSON.parse(defValT);
+	var defHoursT = localStorage.getItem('pay_hours') || payHours;
+	var defHours = JSON.parse(defHoursT);
 
-	var week = parseFloat(qS('#week').value) || 0;
-	var sat = parseFloat(qS('#sat').value) || 0;
-	var sun = parseFloat(qS('#sun').value) || 0;
-	var gross = 0;
+	qS('#basepay').innerText = defMeta['base'];
+
+	var box = qS('section');
+	for (var id in defMap) {
+		//loop over each pay category
+	// 	<p><span class="payTitle">Weekdays</span>
+	// 	<span>: </span>
+	// 	<input class="payInput" type="number" data-payid="wk">
+	// 	<span> shifts at </span>
+	// 	<span class="value">1.375</span>
+	// 	<span>x for </span>
+	// 	<span class="hours">5.5</span>
+	// 	<span> hours</span>
+	// </p>
+		
+		var container = document.createElement('p')
+		var nam = document.createElement('span');
+		nam.classList.add('payTitle');
+		nam.innerText = defMap[id];
+		container.appendChild(nam)
+		var in1 = document.createElement('span');
+		in1.innerText = ': ';
+		container.appendChild(in1);
+		var moneymaker = document.createElement('input');
+		moneymaker.classList.add('payInput');
+		moneymaker.type = 'number';
+		moneymaker.value = 0;
+		moneymaker.dataset.payid = id;
+		moneymaker.dataset.hours = defHours[id];
+		moneymaker.dataset.multiplier = defVal[id];
+		moneymaker.addEventListener('input', recalculate);
+		container.appendChild(moneymaker);
+		var in2 = document.createElement('span');
+		in2.innerText = ' shifts at ';
+		container.appendChild(in2);
+		var val = document.createElement('span');
+		val.innerText = defVal[id];
+		container.appendChild(val);
+		var in3 = document.createElement('span');
+		in3.innerText = '× for ';
+		container.appendChild(in3);
+		var hou = document.createElement('span');
+		hou.innerText = defHours[id];
+		container.appendChild(hou);
+		var in4 = document.createElement('span');
+		in4.innerText = ' hours';
+		container.appendChild(in4);
+		box.appendChild(container);
+	}
+
+
+
+
+
+	// var hours = 5.5;
+	// var baserate = 22.1575;
+
+	// var week = parseFloat(qS('#week').value) || 0;
+	// var sat = parseFloat(qS('#sat').value) || 0;
+	// var sun = parseFloat(qS('#sun').value) || 0;
+	// var gross = 0;
 	
 
-	var weekrate = parseFloat(qS('#weekrate').value);
-	var satrate = parseFloat(qS('#satrate').value);
-	var sunrate = parseFloat(qS('#sunrate').value);
-	console.log(week, weekrate, sat, satrate, sun, sunrate);
-	recalculate();
+	// var weekrate = parseFloat(qS('#weekrate').value);
+	// var satrate = parseFloat(qS('#satrate').value);
+	// var sunrate = parseFloat(qS('#sunrate').value);
+	// console.log(week, weekrate, sat, satrate, sun, sunrate);
+	// recalculate();
 
-	qS('#week').addEventListener('input', function(){
-		week = parseFloat(qS('#week').value);
-		recalculate()
-	});
-	qS('#sat').addEventListener('input', function(){
-		sat = parseFloat(qS('#sat').value);
-		recalculate()
-	});
-	qS('#sun').addEventListener('input', function(){
-		sun = parseFloat(qS('#sun').value);
-		recalculate()
-	});
+	// qS('#week').addEventListener('input', function(){
+	// 	week = parseFloat(qS('#week').value);
+	// 	recalculate()
+	// });
+	// qS('#sat').addEventListener('input', function(){
+	// 	sat = parseFloat(qS('#sat').value);
+	// 	recalculate()
+	// });
+	// qS('#sun').addEventListener('input', function(){
+	// 	sun = parseFloat(qS('#sun').value);
+	// 	recalculate()
+	// });
 
-	qS('#weekrate').addEventListener('input', function(){
-		weekrate = parseFloat(qS('#weekrate').value);
-		recalculate()
-	});
-	qS('#satrate').addEventListener('input', function(){
-		satrate = parseFloat(qS('#satrate').value);
-		recalculate()
-	});
-	qS('#sunrate').addEventListener('input', function(){
-		sunrate = parseFloat(qS('#sunrate').value);
-		recalculate()
-	});
-	qS('#hours').addEventListener('input', function(){
-		hours = parseFloat(qS('#hours').value);
-		recalculate()
-	});
-	qS('#baserate').addEventListener('input', function(){
-		baserate = parseFloat(qS('#baserate').value);
-		recalculate()
-	});
+	// qS('#weekrate').addEventListener('input', function(){
+	// 	weekrate = parseFloat(qS('#weekrate').value);
+	// 	recalculate()
+	// });
+	// qS('#satrate').addEventListener('input', function(){
+	// 	satrate = parseFloat(qS('#satrate').value);
+	// 	recalculate()
+	// });
+	// qS('#sunrate').addEventListener('input', function(){
+	// 	sunrate = parseFloat(qS('#sunrate').value);
+	// 	recalculate()
+	// });
+	// qS('#hours').addEventListener('input', function(){
+	// 	hours = parseFloat(qS('#hours').value);
+	// 	recalculate()
+	// });
+	// qS('#baserate').addEventListener('input', function(){
+	// 	baserate = parseFloat(qS('#baserate').value);
+	// 	recalculate()
+	// });
 	function recalculate(){
-		var weekpay = week * weekrate;
-		var satpay = sat * satrate;
-		var sunpay = sun * sunrate;
-		gross = (weekpay + satpay + sunpay) * hours * baserate;
-		console.log(weekpay, satpay, sunpay, gross);
+		var base = defMeta['base'];
+		var gross = 0;
+		for (var el of document.querySelectorAll('.payInput')) {
+			//22.1575 * 7 shifts * 5.5 hours * 1.375
+			var num = parseFloat(el.value) || 0;
+			var individual = base * num * el.dataset.hours * el.dataset.multiplier;
+			gross += individual;
+		}
+
+		// var weekpay = week * weekrate;
+		// var satpay = sat * satrate;
+		// var sunpay = sun * sunrate;
+		// gross = (weekpay + satpay + sunpay) * hours * baserate;
+		// console.log(weekpay, satpay, sunpay, gross);
 		qS('#gross').innerText = gross.toFixed(2);
 
 		var wk = Math.floor(gross / 2) + 0.99;

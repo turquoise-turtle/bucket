@@ -1,12 +1,18 @@
 body {
 	font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
 	max-width: 95%;
+	position: absolute;
+	/*bottom: 0;*/
 }
 /* @media screen and (max-width: 767px) { */
-input, select, textarea {
+input, select, textarea, p {
 	font-size: 18px;
 }
 /* } */
 .item {
 	margin-bottom: 1em;
+}
+
+.payTitle {
+	font-weight: bold;
 }
